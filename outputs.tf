@@ -10,5 +10,5 @@ output "route_table_id" {
 
 output "route_force_tunneling" {
   description = "Force tunneling route status"
-  value       = "${var.enable_force_tunneling == "true" ? "enabled": "disabled"}"
+  value       = "${var.enable_force_tunneling}"
 }

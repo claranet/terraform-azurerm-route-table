@@ -1,7 +1,7 @@
 # Azure Route Table
 
 This feature creates an [Azure Route Table](https://docs.microsoft.com/en-us/azure/virtual-network/manage-route-table) 
-with an option to create a special Force Tunneling route ([more informations](https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-forced-tunneling-rm)).
+with an option to create a Force Tunneling route ([more informations](https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-forced-tunneling-rm)).
 You need to associate this Route Table with any subnet that needs thoses special routing features.
 
 ## Usage
@@ -27,10 +27,9 @@ module "azure-network-vnet" {
 
   environment      = "${var.environment}"
   location         = "${module.azure-region.location}"
-  location_short   = "${module.azure-region.location-short}"
+  location_short   = "${module.azure-region.location_short}"
   client_name      = "${var.client_name}"
   stack            = "${var.stack}"
-  custom_vnet_name = "${var.custom_vnet_name}"
 
   resource_group_name = "${module.rg.resource_group_name}"
   vnet_cidr           = ["10.10.1.0/16"]
