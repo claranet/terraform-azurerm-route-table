@@ -21,12 +21,12 @@ variable "stack" {
 
 variable "client_name" {
   description = "Client name/account used in naming"
-  type        = "string"
+  type        = string
 }
 
 variable "name_prefix" {
   description = "Optional prefix for VPN Gateway name"
-  type        = "string"
+  type        = string
   default     = ""
 }
 
@@ -37,18 +37,19 @@ variable "custom_name" {
 
 variable "extra_tags" {
   description = "Additional tags to associate with your resources."
-  type        = "map"
+  type        = map(string)
   default     = {}
 }
 
 variable "disable_bgp_route_propagation" {
   description = "Option to disable BGP route propagation on this Route Table."
-  type        = "string"
+  type        = string
   default     = "false"
 }
 
 variable "enable_force_tunneling" {
   description = "Option to enable a route to Force Tunneling (force 0.0.0.0/0 traffic through the Gateway next hop)."
-  type        = "string"
+  type        = string
   default     = "false"
 }
+
