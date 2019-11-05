@@ -18,7 +18,7 @@ This module is optimized to work with the [Claranet terraform-wrapper](https://g
 More details about variables set by the terraform-wrapper available in the [documentation](https://github.com/claranet/terraform-wrapper#environment).
 
 ```hcl
-module "az-region" {
+module "azure-region" {
   source  = "claranet/regions/azurerm"
   version = "x.x.x"
 
@@ -29,7 +29,7 @@ module "rg" {
   source  = "claranet/rg/azurerm"
   version = "x.x.x"
 
-  location     = module.az-region.location
+  location     = module.azure-region.location
   client_name  = var.client_name
   environment  = var.environment
   stack        = var.stack
@@ -57,8 +57,8 @@ module "azure-network-route-table" {
   environment         = var.environment
   stack               = var.stack
   resource_group_name = module.rg.resource_group_name
-  location            = module.az-region.location
-  location_short      = module.az-region.location_short
+  location            = module.azure-region.location
+  location_short      = module.azure-region.location_short
 
   # You can set either a prefix for generated name or a custom one for the resource naming
   custom_name = local.custom_rt_name
@@ -86,7 +86,7 @@ module "azure-network-subnet" {
   version = "x.x.x"
 
   environment           = var.environment
-  location_short        = module.az-region.location_short
+  location_short        = module.azure-region.location_short
   client_name           = var.client_name
   stack                 = var.stack
   custom_subnet_names   = var.custom_subnet_names
