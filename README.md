@@ -5,6 +5,9 @@ This feature creates an [Azure Route Table](https://docs.microsoft.com/en-us/azu
 with an option to create a Force Tunneling route ([more informations](https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-forced-tunneling-rm)).
 You need to associate this Route Table with any subnet that needs thoses special routing features.
 
+## Requirements and limitations
+ * AzureRM terraform provider >= 1.36
+ 
 ## Terraform version compatibility
 
 | Module version | Terraform version |
