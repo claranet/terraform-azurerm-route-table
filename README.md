@@ -132,5 +132,5 @@ module "azure-network-subnet" {
 
 ## Related documentation
 
-- Terraform documentation: [https://www.terraform.io/docs/providers/azurerm/r/route_table.html]
-- Azure documentation: [https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-forced-tunneling-rm]
+- Terraform documentation: [terraform.io/docs/providers/azurerm/r/route_table.html](https://www.terraform.io/docs/providers/azurerm/r/route_table.html)
+- Azure documentation: [docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-forced-tunneling-rm](https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-forced-tunneling-rm)
