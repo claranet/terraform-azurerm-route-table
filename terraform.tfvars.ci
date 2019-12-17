@@ -1,8 +1,8 @@
-location="fr-central"
-location_short="frc"
-client_name="test"
-environment="test"
-stack="ci"
-resource_group_name="ci"
+location            = "fr-central"
+location_short      = "frc"
+client_name         = "test"
+environment         = "test"
+stack               = "ci"
+resource_group_name = "ci"
 
-enable_force_tunneling="true"
+enable_force_tunneling = true

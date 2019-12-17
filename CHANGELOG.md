@@ -1,5 +1,8 @@
 # v2.0.0 - Unreleased
 
+Add
+  * AZ-117: Open Source + Terraform registry
+  
 Breaking
   * AZ-94: Upgrade to terraform 0.12
 
