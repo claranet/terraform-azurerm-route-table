@@ -115,8 +115,8 @@ module "azure-network-subnet" {
 |------|-------------|:----:|:-----:|:-----:|
 | client\_name | Client name/account used in naming | string | n/a | yes |
 | custom\_name | Custom Route table name, generated if not set | string | `""` | no |
-| disable\_bgp\_route\_propagation | Option to disable BGP route propagation on this Route Table. | string | `"false"` | no |
-| enable\_force\_tunneling | Option to enable a route to Force Tunneling (force 0.0.0.0/0 traffic through the Gateway next hop). | string | `"false"` | no |
+| disable\_bgp\_route\_propagation | Option to disable BGP route propagation on this Route Table. | bool | `"false"` | no |
+| enable\_force\_tunneling | Option to enable a route to Force Tunneling (force 0.0.0.0/0 traffic through the Gateway next hop). | bool | `"false"` | no |
 | environment | Project environment | string | n/a | yes |
 | extra\_tags | Additional tags to associate with your resources. | map(string) | `{}` | no |
 | location | Azure region to use | string | n/a | yes |
@@ -132,7 +132,6 @@ module "azure-network-subnet" {
 | route\_force\_tunneling | Force tunneling route status |
 | route\_table\_id | Route table ID |
 | route\_table\_name | Route table name |
-
 
 ## Related documentation
 
