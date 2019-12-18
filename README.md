@@ -1,12 +1,14 @@
 # Azure Route Table
+
 [![Changelog](https://img.shields.io/badge/changelog-release-green.svg)](CHANGELOG.md) [![Notice](https://img.shields.io/badge/notice-copyright-yellow.svg)](NOTICE) [![Apache V2 License](https://img.shields.io/badge/license-Apache%20V2-orange.svg)](LICENSE) [![TF Registry](https://img.shields.io/badge/terraform-registry-blue.svg)](https://registry.terraform.io/modules/claranet/route-table/azurerm/)
 
 This feature creates an [Azure Route Table](https://docs.microsoft.com/en-us/azure/virtual-network/manage-route-table) 
-with an option to create a Force Tunneling route ([more informations](https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-forced-tunneling-rm)).
-You need to associate this Route Table with any subnet that needs thoses special routing features.
+with an option to create a [Force Tunneling route](https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-forced-tunneling-rm).
+You need to associate this Route Table with any subnet that needs those special routing features.
 
 ## Requirements and limitations
- * AzureRM terraform provider >= 1.36
+
+ * [AzureRM Terraform provider](https://www.terraform.io/docs/providers/azurerm/) >= 1.36
  
 ## Terraform version compatibility
 
@@ -16,6 +18,7 @@ You need to associate this Route Table with any subnet that needs thoses special
 | < 2.x.x        | 0.11.x            |
 
 ## Usage
+
 This module is optimized to work with the [Claranet terraform-wrapper](https://github.com/claranet/terraform-wrapper) tool which set some terraform variables in the environment needed by this module.
  
 More details about variables set by the terraform-wrapper available in the [documentation](https://github.com/claranet/terraform-wrapper#environment).
@@ -67,9 +70,9 @@ module "azure-network-route-table" {
   custom_name = local.custom_rt_name
 
   # Options
-  disable_bgp_route_propagation = "false"
+  disable_bgp_route_propagation = false
 
-  enable_force_tunneling = "true"
+  enable_force_tunneling = true
 
   extra_tags = {
     managed_by = "Network admin department"
@@ -112,10 +115,10 @@ module "azure-network-subnet" {
 |------|-------------|:----:|:-----:|:-----:|
 | client\_name | Client name/account used in naming | string | n/a | yes |
 | custom\_name | Custom Route table name, generated if not set | string | `""` | no |
-| disable\_bgp\_route\_propagation | Option to disable BGP route propagation on this Route Table. | string | `"false"` | no |
-| enable\_force\_tunneling | Option to enable a route to Force Tunneling (force 0.0.0.0/0 traffic through the Gateway next hop). | string | `"false"` | no |
+| disable\_bgp\_route\_propagation | Option to disable BGP route propagation on this Route Table. | bool | `"false"` | no |
+| enable\_force\_tunneling | Option to enable a route to Force Tunneling (force 0.0.0.0/0 traffic through the Gateway next hop). | bool | `"false"` | no |
 | environment | Project environment | string | n/a | yes |
-| extra\_tags | Additional tags to associate with your resources. | map | `<map>` | no |
+| extra\_tags | Additional tags to associate with your resources. | map(string) | `{}` | no |
 | location | Azure region to use | string | n/a | yes |
 | location\_short | Short string for Azure location | string | n/a | yes |
 | name\_prefix | Optional prefix for VPN Gateway name | string | `""` | no |
@@ -132,5 +135,5 @@ module "azure-network-subnet" {
 
 ## Related documentation
 
-- Terraform documentation: [https://www.terraform.io/docs/providers/azurerm/r/route_table.html]
-- Azure documentation: [https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-forced-tunneling-rm]
+- Terraform documentation: [terraform.io/docs/providers/azurerm/r/route_table.html](https://www.terraform.io/docs/providers/azurerm/r/route_table.html)
+- Azure documentation: [docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-forced-tunneling-rm](https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-forced-tunneling-rm)

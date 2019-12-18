@@ -15,6 +15,6 @@ resource "azurerm_route" "force-internet-tunneling" {
   address_prefix      = "0.0.0.0/0"
   next_hop_type       = "VirtualNetworkGateway"
 
-  count = var.enable_force_tunneling == "true" ? 1 : 0
+  count = var.enable_force_tunneling ? 1 : 0
 }
 

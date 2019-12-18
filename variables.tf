@@ -33,6 +33,7 @@ variable "name_prefix" {
 variable "custom_name" {
   description = "Custom Route table name, generated if not set"
   default     = ""
+  type        = string
 }
 
 variable "extra_tags" {
@@ -43,13 +44,13 @@ variable "extra_tags" {
 
 variable "disable_bgp_route_propagation" {
   description = "Option to disable BGP route propagation on this Route Table."
-  type        = string
-  default     = "false"
+  type        = bool
+  default     = false
 }
 
 variable "enable_force_tunneling" {
   description = "Option to enable a route to Force Tunneling (force 0.0.0.0/0 traffic through the Gateway next hop)."
-  type        = string
-  default     = "false"
+  type        = bool
+  default     = false
 }
 
