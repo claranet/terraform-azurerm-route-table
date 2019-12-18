@@ -1,4 +1,4 @@
-# v2.0.0 - Unreleased
+# v2.0.0 - 2019-12-18
 
 Add
   * AZ-117: Open Source + Terraform registry
