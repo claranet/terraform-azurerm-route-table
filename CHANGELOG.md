@@ -1,3 +1,9 @@
+# v3.0.0 - Unreleased
+
+Updated
+  * AZ-206: Don't pin AzureRM provider version to 1.x, now compatible 2.x+
+  * AZ-209: Include our generic Gitlab CI template
+
 # v2.0.0 - 2019-12-18
 
 Add
