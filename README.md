@@ -12,10 +12,12 @@ You need to associate this Route Table with any subnet that needs those special 
  
 ## Terraform version compatibility
 
-| Module version | Terraform version |
-|----------------|-------------------|
-| >= 2.x.x       | 0.12.x            |
-| < 2.x.x        | 0.11.x            |
+| Module version | Terraform version | AzureRM version |
+|----------------|-------------------| --------------- |
+| >= 4.x.x       | 0.13.x            | >= 2.0          |
+| >= 3.x.x       | 0.12.x            | >= 2.0          |
+| >= 2.x.x       | 0.12.x            | < 2.0           |
+| <  2.x.x       | 0.11.x            | < 2.0           |
 
 ## Usage
 
@@ -112,18 +114,18 @@ module "azure-network-subnet" {
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| client\_name | Client name/account used in naming | string | n/a | yes |
-| custom\_name | Custom Route table name, generated if not set | string | `""` | no |
-| disable\_bgp\_route\_propagation | Option to disable BGP route propagation on this Route Table. | bool | `"false"` | no |
-| enable\_force\_tunneling | Option to enable a route to Force Tunneling (force 0.0.0.0/0 traffic through the Gateway next hop). | bool | `"false"` | no |
-| environment | Project environment | string | n/a | yes |
-| extra\_tags | Additional tags to associate with your resources. | map(string) | `{}` | no |
-| location | Azure region to use | string | n/a | yes |
-| location\_short | Short string for Azure location | string | n/a | yes |
-| name\_prefix | Optional prefix for VPN Gateway name | string | `""` | no |
-| resource\_group\_name | Name of the resource group | string | n/a | yes |
-| stack | Project stack name | string | n/a | yes |
+|------|-------------|------|---------|:--------:|
+| client\_name | Client name/account used in naming | `string` | n/a | yes |
+| custom\_name | Custom Route table name, generated if not set | `string` | `""` | no |
+| disable\_bgp\_route\_propagation | Option to disable BGP route propagation on this Route Table. | `bool` | `false` | no |
+| enable\_force\_tunneling | Option to enable a route to Force Tunneling (force 0.0.0.0/0 traffic through the Gateway next hop). | `bool` | `false` | no |
+| environment | Project environment | `any` | n/a | yes |
+| extra\_tags | Additional tags to associate with your resources. | `map(string)` | `{}` | no |
+| location | Azure region to use | `any` | n/a | yes |
+| location\_short | Short string for Azure location | `any` | n/a | yes |
+| name\_prefix | Optional prefix for VPN Gateway name | `string` | `""` | no |
+| resource\_group\_name | Name of the resource group | `any` | n/a | yes |
+| stack | Project stack name | `any` | n/a | yes |
 
 ## Outputs
 
