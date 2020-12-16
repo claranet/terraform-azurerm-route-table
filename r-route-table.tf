@@ -1,5 +1,5 @@
 resource "azurerm_route_table" "route-table" {
-  name                = coalesce(var.custom_name, local.default_name)
+  name                = local.rt_name
   location            = var.location
   resource_group_name = var.resource_group_name
 
