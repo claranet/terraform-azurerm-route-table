@@ -1,4 +1,4 @@
-resource "azurerm_route_table" "route-table" {
+resource "azurerm_route_table" "route_table" {
   name                = local.rt_name
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -8,10 +8,10 @@ resource "azurerm_route_table" "route-table" {
   tags = merge(local.default_tags, var.extra_tags)
 }
 
-resource "azurerm_route" "force-internet-tunneling" {
+resource "azurerm_route" "force_internet_tunneling" {
   name                = "InternetForceTunneling"
   resource_group_name = var.resource_group_name
-  route_table_name    = azurerm_route_table.route-table.name
+  route_table_name    = azurerm_route_table.route_table.name
   address_prefix      = "0.0.0.0/0"
   next_hop_type       = "VirtualNetworkGateway"
 
