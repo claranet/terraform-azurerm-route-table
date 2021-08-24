@@ -13,7 +13,8 @@ You need to associate this Route Table with any subnet that needs those special 
 ## Terraform version compatibility
 
 | Module version | Terraform version | AzureRM version |
-|----------------|-------------------| --------------- |
+| -------------- | ----------------- | --------------- |
+| >= 5.x.x       | 0.15.x & 1.0.x    | >= 2.0          |
 | >= 4.x.x       | 0.13.x            | >= 2.0          |
 | >= 3.x.x       | 0.12.x            | >= 2.0          |
 | >= 2.x.x       | 0.12.x            | < 2.0           |
@@ -111,6 +112,24 @@ module "azure-network-subnet" {
 
 ```
 
+<!-- BEGIN_TF_DOCS -->
+## Providers
+
+| Name | Version |
+|------|---------|
+| azurerm | >= 1.36 |
+
+## Modules
+
+No modules.
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [azurerm_route.force-internet-tunneling](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/route) | resource |
+| [azurerm_route_table.route-table](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/route_table) | resource |
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -134,7 +153,7 @@ module "azure-network-subnet" {
 | route\_force\_tunneling | Force tunneling route status |
 | route\_table\_id | Route table ID |
 | route\_table\_name | Route table name |
-
+<!-- END_TF_DOCS -->
 ## Related documentation
 
 - Terraform documentation: [terraform.io/docs/providers/azurerm/r/route_table.html](https://www.terraform.io/docs/providers/azurerm/r/route_table.html)
