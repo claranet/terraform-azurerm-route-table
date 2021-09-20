@@ -6,11 +6,8 @@ This feature creates an [Azure Route Table](https://docs.microsoft.com/en-us/azu
 with an option to create a [Force Tunneling route](https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-forced-tunneling-rm).
 You need to associate this Route Table with any subnet that needs those special routing features.
 
-## Requirements and limitations
-
- * [AzureRM Terraform provider](https://www.terraform.io/docs/providers/azurerm/) >= 1.36
- 
-## Terraform version compatibility
+<!-- BEGIN_TF_DOCS -->
+## Global versionning rule for Claranet Azure modules
 
 | Module version | Terraform version | AzureRM version |
 | -------------- | ----------------- | --------------- |
@@ -22,12 +19,12 @@ You need to associate this Route Table with any subnet that needs those special 
 
 ## Usage
 
-This module is optimized to work with the [Claranet terraform-wrapper](https://github.com/claranet/terraform-wrapper) tool which set some terraform variables in the environment needed by this module.
- 
-More details about variables set by the terraform-wrapper available in the [documentation](https://github.com/claranet/terraform-wrapper#environment).
+This module is optimized to work with the [Claranet terraform-wrapper](https://github.com/claranet/terraform-wrapper) tool
+which set some terraform variables in the environment needed by this module.
+More details about variables set by the `terraform-wrapper` available in the [documentation](https://github.com/claranet/terraform-wrapper#environment).
 
 ```hcl
-module "azure-region" {
+module "azure_region" {
   source  = "claranet/regions/azurerm"
   version = "x.x.x"
 
@@ -38,27 +35,27 @@ module "rg" {
   source  = "claranet/rg/azurerm"
   version = "x.x.x"
 
-  location     = module.azure-region.location
-  client_name  = var.client_name
-  environment  = var.environment
-  stack        = var.stack
+  location    = module.azure_region.location
+  client_name = var.client_name
+  environment = var.environment
+  stack       = var.stack
 }
 
-module "azure-network-vnet" {
+module "azure_network_vnet" {
   source  = "claranet/vnet/azurerm"
   version = "x.x.x"
 
-  environment      = var.environment
-  location         = module.azure-region.location
-  location_short   = module.azure-region.location_short
-  client_name      = var.client_name
-  stack            = var.stack
+  environment    = var.environment
+  location       = module.azure_region.location
+  location_short = module.azure_region.location_short
+  client_name    = var.client_name
+  stack          = var.stack
 
   resource_group_name = module.rg.resource_group_name
   vnet_cidr           = ["10.10.1.0/16"]
 }
 
-module "azure-network-route-table" {
+module "azure_network_route_table" {
   source  = "claranet/route-table/azurerm"
   version = "x.x.x"
 
@@ -66,11 +63,11 @@ module "azure-network-route-table" {
   environment         = var.environment
   stack               = var.stack
   resource_group_name = module.rg.resource_group_name
-  location            = module.azure-region.location
-  location_short      = module.azure-region.location_short
+  location            = module.azure_region.location
+  location_short      = module.azure_region.location_short
 
   # You can set either a prefix for generated name or a custom one for the resource naming
-  custom_name = local.custom_rt_name
+  #custom_name = "my_route_table"
 
   # Options
   disable_bgp_route_propagation = false
@@ -78,41 +75,37 @@ module "azure-network-route-table" {
   enable_force_tunneling = true
 
   extra_tags = {
-    managed_by = "Network admin department"
+    foo = "bar"
   }
 }
 
-resource "azurerm_route" "custom-route" {
+resource "azurerm_route" "custom_route" {
   name                = "acceptanceTestRoute1"
   resource_group_name = module.rg.resource_group_name
-  route_table_name    = module.azure-network-route-table.route_table_name
+  route_table_name    = module.azure_network_route_table.route_table_name
   address_prefix      = "10.1.0.0/16"
-  next_hop_type       = "vnetlocal"
+  next_hop_type       = "VnetLocal"
 }
 
-module "azure-network-subnet" {
+module "azure_network_subnet" {
   source  = "claranet/subnet/azurerm"
   version = "x.x.x"
 
-  environment           = var.environment
-  location_short        = module.azure-region.location_short
-  client_name           = var.client_name
-  stack                 = var.stack
-  custom_subnet_names   = var.custom_subnet_names
+  environment    = var.environment
+  location_short = module.azure_region.location_short
+  client_name    = var.client_name
+  stack          = var.stack
 
-  resource_group_name  = module.rg.resource_group_name
-  virtual_network_name = module.azure-network-vnet.virtual_network_name
+  resource_group_name = module.rg.resource_group_name
+
+  virtual_network_name = module.azure_network_vnet.virtual_network_name
   subnet_cidr_list     = ["10.10.1.0/24"]
 
-  # Those lists must be the same size as the associated count value and `subnet_cidr_list` size and or not set (default count value is "0")
-  # This limitation should be removed with Terraform 0.12
-  route_table_count            = "1"
-  route_table_ids              = [module.azure-network-route-table.route_table_id]
+  route_table_name = module.azure_network_route_table.route_table_name
 }
 
 ```
 
-<!-- BEGIN_TF_DOCS -->
 ## Providers
 
 | Name | Version |
