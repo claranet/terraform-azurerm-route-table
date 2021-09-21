@@ -7,7 +7,7 @@ with an option to create a [Force Tunneling route](https://docs.microsoft.com/en
 You need to associate this Route Table with any subnet that needs those special routing features.
 
 <!-- BEGIN_TF_DOCS -->
-## Global versionning rule for Claranet Azure modules
+## Global versioning rule for Claranet Azure modules
 
 | Module version | Terraform version | AzureRM version |
 | -------------- | ----------------- | --------------- |
