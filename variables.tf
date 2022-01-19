@@ -29,18 +29,6 @@ variable "resource_group_name" {
   type        = string
 }
 
-variable "name_prefix" {
-  description = "Optional prefix for VPN Gateway name"
-  type        = string
-  default     = ""
-}
-
-variable "custom_name" {
-  description = "Custom Route table name, generated if not set"
-  default     = ""
-  type        = string
-}
-
 variable "extra_tags" {
   description = "Additional tags to associate with your resources."
   type        = map(string)
