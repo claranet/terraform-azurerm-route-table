@@ -29,12 +29,6 @@ variable "resource_group_name" {
   type        = string
 }
 
-variable "extra_tags" {
-  description = "Additional tags to associate with your resources."
-  type        = map(string)
-  default     = {}
-}
-
 variable "disable_bgp_route_propagation" {
   description = "Option to disable BGP route propagation on this Route Table."
   type        = bool

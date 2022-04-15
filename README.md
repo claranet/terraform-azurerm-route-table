@@ -131,6 +131,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | client\_name | Client name/account used in naming | `string` | n/a | yes |
 | custom\_name | Custom Route table name, generated if not set | `string` | `""` | no |
+| default\_tags\_enabled | Option to enable or disable default tags | `bool` | `true` | no |
 | disable\_bgp\_route\_propagation | Option to disable BGP route propagation on this Route Table. | `bool` | `false` | no |
 | enable\_force\_tunneling | Option to enable a route to Force Tunneling (force 0.0.0.0/0 traffic through the Gateway next hop). | `bool` | `false` | no |
 | environment | Project environment | `string` | n/a | yes |
