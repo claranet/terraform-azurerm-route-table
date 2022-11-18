@@ -1,4 +1,4 @@
-resource "azurecaf_name" "rt" {
+data "azurecaf_name" "rt" {
   name          = var.stack
   resource_type = "azurerm_route_table"
   prefixes      = var.name_prefix == "" ? null : [local.name_prefix]
