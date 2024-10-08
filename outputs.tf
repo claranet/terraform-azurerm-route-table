@@ -1,14 +1,19 @@
-output "route_table_name" {
-  description = "Route table name"
-  value       = azurerm_route_table.route_table.name
+output "name" {
+  description = "Route table name."
+  value       = azurerm_route_table.main.name
 }
 
-output "route_table_id" {
-  description = "Route table ID"
-  value       = azurerm_route_table.route_table.id
+output "id" {
+  description = "Route table ID."
+  value       = azurerm_route_table.main.id
 }
 
-output "route_force_tunneling" {
-  description = "Force tunneling route status"
-  value       = var.enable_force_tunneling
+output "resource" {
+  description = "Route table resource object."
+  value       = azurerm_route_table.main
+}
+
+output "force_internet_tunneling_route" {
+  description = "Route object for Force Internet Tunneling."
+  value       = one(azurerm_route.force_internet_tunneling[*])
 }

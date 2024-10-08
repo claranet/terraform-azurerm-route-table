@@ -10,33 +10,21 @@ variable "location_short" {
 }
 
 variable "client_name" {
-  description = "Client name/account used in naming"
+  description = "Client name/account used in naming."
   type        = string
 }
 
 variable "environment" {
-  description = "Project environment"
+  description = "Project environment."
   type        = string
 }
 
 variable "stack" {
-  description = "Project stack name"
+  description = "Project stack name."
   type        = string
 }
 
 variable "resource_group_name" {
-  description = "Resource group name"
+  description = "Resource group name."
   type        = string
-}
-
-variable "disable_bgp_route_propagation" {
-  description = "Option to disable BGP route propagation on this Route Table."
-  type        = bool
-  default     = false
-}
-
-variable "enable_force_tunneling" {
-  description = "Option to enable a route to Force Tunneling (force 0.0.0.0/0 traffic through the Gateway next hop)."
-  type        = bool
-  default     = false
 }
