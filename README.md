@@ -37,45 +37,14 @@ More details about variables set by the `terraform-wrapper` available in the [do
 [Hashicorp Terraform](https://github.com/hashicorp/terraform/). Instead, we recommend to use [OpenTofu](https://github.com/opentofu/opentofu/).
 
 ```hcl
-module "azure_region" {
-  source  = "claranet/regions/azurerm"
-  version = "x.x.x"
-
-  azure_region = var.azure_region
-}
-
-module "rg" {
-  source  = "claranet/rg/azurerm"
-  version = "x.x.x"
-
-  location    = module.azure_region.location
-  client_name = var.client_name
-  environment = var.environment
-  stack       = var.stack
-}
-
-module "azure_network_vnet" {
-  source  = "claranet/vnet/azurerm"
-  version = "x.x.x"
-
-  environment    = var.environment
-  location       = module.azure_region.location
-  location_short = module.azure_region.location_short
-  client_name    = var.client_name
-  stack          = var.stack
-
-  resource_group_name = module.rg.resource_group_name
-  vnet_cidr           = ["10.10.1.0/16"]
-}
-
-module "azure_network_route_table" {
+module "route_table" {
   source  = "claranet/route-table/azurerm"
   version = "x.x.x"
 
   client_name         = var.client_name
   environment         = var.environment
   stack               = var.stack
-  resource_group_name = module.rg.resource_group_name
+  resource_group_name = module.rg.name
   location            = module.azure_region.location
   location_short      = module.azure_region.location_short
 
@@ -83,9 +52,8 @@ module "azure_network_route_table" {
   #custom_name = "my_route_table"
 
   # Options
-  disable_bgp_route_propagation = false
-
-  enable_force_tunneling = true
+  bgp_route_propagation_enabled = false
+  force_tunneling_enabled       = true
 
   extra_tags = {
     foo = "bar"
@@ -94,36 +62,50 @@ module "azure_network_route_table" {
 
 resource "azurerm_route" "custom_route" {
   name                = "acceptanceTestRoute1"
-  resource_group_name = module.rg.resource_group_name
-  route_table_name    = module.azure_network_route_table.route_table_name
+  resource_group_name = module.rg.name
+  route_table_name    = module.route_table.name
   address_prefix      = "10.1.0.0/16"
   next_hop_type       = "VnetLocal"
 }
 
-module "azure_network_subnet" {
-  source  = "claranet/subnet/azurerm"
-  version = "x.x.x"
+# module "vnet" {
+#   source  = "claranet/vnet/azurerm"
+#   version = "x.x.x"
 
-  environment    = var.environment
-  location_short = module.azure_region.location_short
-  client_name    = var.client_name
-  stack          = var.stack
+#   environment    = var.environment
+#   location       = module.azure_region.location
+#   location_short = module.azure_region.location_short
+#   client_name    = var.client_name
+#   stack          = var.stack
 
-  resource_group_name = module.rg.resource_group_name
+#   resource_group_name = module.rg.name
+#   cidrs               = ["10.10.1.0/16"]
+# }
 
-  virtual_network_name = module.azure_network_vnet.virtual_network_name
-  subnet_cidr_list     = ["10.10.1.0/24"]
+# module "subnet" {
+#   source  = "claranet/subnet/azurerm"
+#   version = "x.x.x"
 
-  route_table_name = module.azure_network_route_table.route_table_name
-}
+#   environment    = var.environment
+#   location_short = module.azure_region.location_short
+#   client_name    = var.client_name
+#   stack          = var.stack
+
+#   resource_group_name = module.rg.name
+
+#   virtual_network_name = module.vnet.name
+#   cidrs                = ["10.10.1.0/24"]
+
+#   route_table_name = module.route_table.name
+# }
 ```
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| azurecaf | ~> 1.2, >= 1.2.22 |
-| azurerm | ~> 3.0 |
+| azurecaf | ~> 1.2.28 |
+| azurerm | ~> 4.0 |
 
 ## Modules
 
@@ -134,35 +116,35 @@ No modules.
 | Name | Type |
 |------|------|
 | [azurerm_route.force_internet_tunneling](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/route) | resource |
-| [azurerm_route_table.route_table](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/route_table) | resource |
+| [azurerm_route_table.main](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/route_table) | resource |
 | [azurecaf_name.rt](https://registry.terraform.io/providers/claranet/azurecaf/latest/docs/data-sources/name) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| client\_name | Client name/account used in naming | `string` | n/a | yes |
-| custom\_name | Custom Route table name, generated if not set | `string` | `""` | no |
-| default\_tags\_enabled | Option to enable or disable default tags | `bool` | `true` | no |
-| disable\_bgp\_route\_propagation | Option to disable BGP route propagation on this Route Table. | `bool` | `false` | no |
-| enable\_force\_tunneling | Option to enable a route to Force Tunneling (force 0.0.0.0/0 traffic through the Gateway next hop). | `bool` | `false` | no |
-| environment | Project environment | `string` | n/a | yes |
+| bgp\_route\_propagation\_enabled | Option to enable BGP route propagation on this Route Table. | `bool` | `false` | no |
+| client\_name | Client name/account used in naming. | `string` | n/a | yes |
+| custom\_name | Custom Route table name, generated if not set. | `string` | `""` | no |
+| default\_tags\_enabled | Option to enable or disable default tags. | `bool` | `true` | no |
+| environment | Project environment. | `string` | n/a | yes |
 | extra\_tags | Additional tags to associate with your resources. | `map(string)` | `{}` | no |
+| force\_tunneling\_enabled | Option to enable a route to Force Tunneling (force 0.0.0.0/0 traffic through the Gateway next hop). | `bool` | `false` | no |
 | location | Azure location. | `string` | n/a | yes |
 | location\_short | Short string for Azure location. | `string` | n/a | yes |
-| name\_prefix | Optional prefix for the generated name | `string` | `""` | no |
-| name\_suffix | Optional suffix for the generated name | `string` | `""` | no |
-| resource\_group\_name | Resource group name | `string` | n/a | yes |
-| stack | Project stack name | `string` | n/a | yes |
-| use\_caf\_naming | Use the Azure CAF naming provider to generate default resource name. `custom_name` override this if set. Legacy default name is used if this is set to `false`. | `bool` | `true` | no |
+| name\_prefix | Optional prefix for the generated name. | `string` | `""` | no |
+| name\_suffix | Optional suffix for the generated name. | `string` | `""` | no |
+| resource\_group\_name | Resource group name. | `string` | n/a | yes |
+| stack | Project stack name. | `string` | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| route\_force\_tunneling | Force tunneling route status |
-| route\_table\_id | Route table ID |
-| route\_table\_name | Route table name |
+| force\_internet\_tunneling\_route | Route object for Force Internet Tunneling. |
+| id | Route table ID. |
+| name | Route table name. |
+| resource | Route table resource object. |
 <!-- END_TF_DOCS -->
 ## Related documentation
 
