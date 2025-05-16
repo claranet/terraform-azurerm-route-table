@@ -44,7 +44,7 @@ module "azure_network_route_table" {
   #custom_name = "my_route_table"
 
   # Options
-  disable_bgp_route_propagation = false
+  bgp_route_propagation_enabled = false
 
   enable_force_tunneling = true
 
