@@ -29,7 +29,7 @@ variable "resource_group_name" {
   type        = string
 }
 
-variable "disable_bgp_route_propagation" {
+variable "bgp_route_propagation_enabled" {
   description = "Option to disable BGP route propagation on this Route Table."
   type        = bool
   default     = false

@@ -83,7 +83,7 @@ module "azure_network_route_table" {
   #custom_name = "my_route_table"
 
   # Options
-  disable_bgp_route_propagation = false
+  bgp_route_propagation_enabled = false
 
   enable_force_tunneling = true
 
@@ -141,10 +141,10 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| bgp\_route\_propagation\_enabled | Option to disable BGP route propagation on this Route Table. | `bool` | `false` | no |
 | client\_name | Client name/account used in naming | `string` | n/a | yes |
 | custom\_name | Custom Route table name, generated if not set | `string` | `""` | no |
 | default\_tags\_enabled | Option to enable or disable default tags | `bool` | `true` | no |
-| disable\_bgp\_route\_propagation | Option to disable BGP route propagation on this Route Table. | `bool` | `false` | no |
 | enable\_force\_tunneling | Option to enable a route to Force Tunneling (force 0.0.0.0/0 traffic through the Gateway next hop). | `bool` | `false` | no |
 | environment | Project environment | `string` | n/a | yes |
 | extra\_tags | Additional tags to associate with your resources. | `map(string)` | `{}` | no |
