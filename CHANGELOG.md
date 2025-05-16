@@ -1,3 +1,26 @@
+## 7.2.0 (2025-05-16)
+
+### Features
+
+* **refactor:** rename variable for consistency d7b98d7
+
+### Continuous Integration
+
+* 👷 tune semantic 🚀 for v7 legacy 9d31afc
+
+### Miscellaneous Chores
+
+* 🔧 update azurerm provider version to 3.114 b0b764f
+* avoid use of deprecated disable_bgp_route_propagation 2a112d8, closes #2
+* **deps:** update dependency opentofu to v1.8.3 8d474ea
+* **deps:** update dependency pre-commit to v4 063fbba
+* **deps:** update dependency pre-commit to v4.0.1 2907456
+* **deps:** update dependency trivy to v0.56.1 63dbb6c
+* **deps:** update dependency trivy to v0.56.2 7a28815
+* **deps:** update pre-commit hook pre-commit/pre-commit-hooks to v5 3adb233
+* prepare for new examples structure 78740c2
+* update examples structure 43c2fdf
+
 ## 7.1.0 (2024-10-03)
 
 ### Features
