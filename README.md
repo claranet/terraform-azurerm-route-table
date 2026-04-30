@@ -103,7 +103,7 @@ resource "azurerm_route" "custom_route" {
 ## Providers
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | azurecaf | >= 1.2.28 |
 | azurerm | ~> 4.31 |
 
@@ -114,7 +114,7 @@ No modules.
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [azurerm_route.force_internet_tunneling](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/route) | resource |
 | [azurerm_route_table.main](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/route_table) | resource |
 | [azurecaf_name.rt](https://registry.terraform.io/providers/claranet/azurecaf/latest/docs/data-sources/name) | data source |
@@ -122,7 +122,7 @@ No modules.
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | bgp\_route\_propagation\_enabled | Option to enable BGP route propagation on this Route Table. | `bool` | `false` | no |
 | client\_name | Client name/account used in naming. | `string` | n/a | yes |
 | custom\_name | Custom Route table name, generated if not set. | `string` | `""` | no |
@@ -140,7 +140,7 @@ No modules.
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | force\_internet\_tunneling\_route | Route object for Force Internet Tunneling. |
 | id | Route table ID. |
 | name | Route table name. |
