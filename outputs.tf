@@ -11,6 +11,7 @@ output "id" {
 output "resource" {
   description = "Route table resource object."
   value       = azurerm_route_table.main
+  sensitive   = true
 }
 
 output "force_internet_tunneling_route" {
