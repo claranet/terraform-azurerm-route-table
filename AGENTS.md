@@ -189,11 +189,12 @@ When upgrading a module to v9, apply the following changes in addition to the gu
     required_version = ">= 1.12"
   }
   ```
-- Update the `opentofu` entry to `1.12.5` (or the latest patch satisfying `>= 1.12`) in both mise lockfiles: [`.tool-versions`](.tool-versions) and `mise.lock` (if present in the module).
+- Update the `opentofu` entry to `1.12.5` (or the latest patch satisfying `>= 1.12`) in the mise tool pins, [`.tool-versions`](.tool-versions), then regenerate `mise.lock` (if present in the module) with `mise lock` so both files agree. `mise.lock` is generated, do not hand-edit it.
 
-### 2. AzureRM Provider Version
+### 2. Provider Versions
 
-- Set the AzureRM provider version constraint to `~> 5.0` in [`providers.tf`](providers.tf):
+- Set the AzureRM provider version constraint to `~> 5.0` and, when the module uses Claranet's
+  "azurecaf naming" provider, set its constraint to `~> 1.3.0` in [`providers.tf`](providers.tf):
   ```terraform
   terraform {
     required_providers {
@@ -201,9 +202,16 @@ When upgrading a module to v9, apply the following changes in addition to the gu
         source  = "hashicorp/azurerm"
         version = "~> 5.0"
       }
+      azurecaf = {
+        source  = "claranet/azurecaf"
+        version = "~> 1.3.0"
+      }
     }
   }
   ```
+- These are the constraints carried by `providers.tf` in the v9 module template of the `../../ci` repository,
+  which is the reference for the target state. Modules migrated early may still carry a looser constraint such
+  as `>= 1.2.28` for `azurecaf`; do not copy that, bump them to `~> 1.3.0`.
 
 ### 3. Examples Directory
 
@@ -212,14 +220,17 @@ When upgrading a module to v9, apply the following changes in addition to the gu
 
 ### 4. GitLab CI Template
 
-- During v9 development, point the `.gitlab-ci.yml` include `ref` to the `v9/SREAA-368` branch instead of `master`:
+- The v9 pipeline changes are merged and released in the `../../ci` repository (release `9.0.0`), so the
+  `.gitlab-ci.yml` include `ref` must stay on `master`:
   ```yaml
   include:
     - project: "claranet/projects/cloud/azure/terraform/ci"
-      ref: v9/SREAA-368
+      ref: master
       file: "/pipeline.yml"
   ```
-- Revert the `ref` back to `master` (or the relevant release tag) once `v9/SREAA-368` is merged and released.
+- Only point the `ref` at a temporary branch such as `v9/SREAA-368` while the pipeline changes you depend on
+  are still unreleased in the `ci` repository, and revert it to `master` (or the relevant release tag) before merging.
+- Modules migrated before the `ci` `9.0.0` release may still point at `ref: v9/SREAA-368`; revert those to `master`.
 - Also update the `.gitlab-ci.yml` `variables` block so `TF_MIN_VERSION` and `AZURERM_PROVIDER_MIN_VERSION` match the new constraints from steps 1 and 2:
   ```yaml
   variables:
@@ -234,6 +245,13 @@ When upgrading a module to v9, apply the following changes in addition to the gu
 ### 6. AzureRM 5.0 Code Migration
 
 - Before touching resource/data-source code, read the official upgrade guide: [AzureRM Provider 5.0 Upgrade Guide](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/5.0-upgrade-guide).
+  The registry renders that page client-side, so agents fetching it programmatically get an empty document. Use the
+  source Markdown instead:
+  ```bash
+  curl -sSL https://raw.githubusercontent.com/hashicorp/terraform-provider-azurerm/main/website/docs/guides/5.0-upgrade-guide.html.markdown
+  ```
+- Cross-check the guide against the provider schema after `tofu init -upgrade`, since the schema is authoritative
+  for whether an argument the module uses still exists: `tofu providers schema -json`.
 - Identify and apply every breaking change relevant to the resources used in the module (renamed/removed arguments, changed defaults, removed resources/data sources, behavior changes, etc.) as documented in the guide.
 - Re-run `tflint` and `tofu validate`/`plan` after migration to confirm the module is compatible with AzureRM `~> 5.0`.
 
@@ -258,13 +276,21 @@ When upgrading a module to v9, apply the following changes in addition to the gu
   ```
   - `{description body}`: summarize the changes applied (version bumps, examples updated, AzureRM 5.0 migration, README regeneration, etc.).
   - `BREAKING CHANGES: {breaking description}`: list every breaking change from the AzureRM 5.0 migration (step 6) and the raised minimum versions, so consumers know what to expect when upgrading.
-- Open a merge request from `v9/SREAA-368` against `master` or `main` (default branch) using the [`glab`](https://gitlab.com/gitlab-org/cli) CLI:
+- Push the development branch, then open a merge request from `v9/SREAA-368` against `master` or `main`
+  (default branch) using the [`glab`](https://gitlab.com/gitlab-org/cli) CLI. `--source-branch` is the branch
+  holding the work and `--target-branch` is the branch it is merged into, so the target is the default branch,
+  never `v9/SREAA-368`:
   ```bash
+  git push -u origin v9/SREAA-368
+
   glab mr create \
+    --source-branch v9/SREAA-368 \
+    --target-branch master \
     --title "feat(SREAA-368): upgrade module to v9 (OpenTofu >= 1.12, AzureRM ~> 5.0)" \
-    --description "{description body}" \
-    --target-branch v9/SREAA-368
+    --description "{description body}"
   ```
+  `--source-branch` defaults to the current branch and can be omitted when running the command from
+  `v9/SREAA-368`. Use `--target-branch main` on modules whose default branch is `main`.
 - Ensure all pre-commit checks and CI pipelines pass before requesting review.
 
 ## Git Contribution Guidelines
@@ -295,8 +321,10 @@ All AI agents must follow these git contribution standards when working on OpenT
 - **Verify tool versions** match project requirements in [`.tool-versions`](.tool-versions)
 
 ### Code Quality Assurance
-- **Install pre-commit hooks**: `pre-commit install`
-- **Pre-commit must trigger** on each commit to ensure validity of changes
+- **Install the git hooks**: `prek install` (or `pre-commit install`). `prek` is the runner pinned in
+  [`.tool-versions`](.tool-versions), and [`.pre-commit-config.yaml`](.pre-commit-config.yaml) declares
+  `default_install_hook_types: [commit-msg, pre-commit]`, so both hook types are installed in one command.
+- **The hooks must trigger** on each commit to ensure validity of changes
 - **All pre-commit checks must pass** before pushing changes
 - **Address any pre-commit failures** immediately
 
