@@ -213,12 +213,27 @@ When upgrading a module to v9, apply the following changes in addition to the gu
   which is the reference for the target state. Modules migrated early may still carry a looser constraint such
   as `>= 1.2.28` for `azurecaf`; do not copy that, bump them to `~> 1.3.0`.
 
-### 3. Examples Directory
+### 3. Diagnostic Settings Module
+
+- Bump the Claranet `diagnostic-settings` module used for logs (usually in [`m-logs.tf`](m-logs.tf), sometimes
+  named `r-logs.tf`) to `~> 9.0`, which is the v9-compatible release (AzureRM `~> 5.0`):
+  ```terraform
+  module "diagnostics" {
+    source  = "claranet/diagnostic-settings/azurerm"
+    version = "~> 9.0"
+    ...
+  }
+  ```
+- Modules still pinned to `~> 8.0` (or with the `version` line commented out) must be updated: the `8.x` releases
+  require AzureRM `~> 4.31`, which conflicts with the root module's `~> 5.0` constraint and breaks provider resolution.
+- Apply the same bump to any other Claranet submodule call in the module and its `examples/`.
+
+### 4. Examples Directory
 
 - Update every `examples/*/versions.tf` (and any other version-pinning file under `examples/`) to match the same `required_version` (OpenTofu `>= 1.12`) and AzureRM provider (`~> 5.0`) constraints applied to the module root in steps 1 and 2.
 - Check all examples for breaking changes too, not just the root module.
 
-### 4. GitLab CI Template
+### 5. GitLab CI Template
 
 - The v9 pipeline changes are merged and released in the `../../ci` repository (release `9.0.0`), so the
   `.gitlab-ci.yml` include `ref` must stay on `master`:
@@ -238,11 +253,11 @@ When upgrading a module to v9, apply the following changes in addition to the gu
     AZURERM_PROVIDER_MIN_VERSION: "5.0"
   ```
 
-### 5. `.config` Directory Sync
+### 6. `.config` Directory Sync
 
 - Sync [`.config/terraform-docs.yml`](.config/terraform-docs.yml) and [`.config/tflint.hcl`](.config/tflint.hcl) with the versions found in the `../../ci` repository root `.config/` directory, so the module stays aligned with the latest linting and documentation rules.
 
-### 6. AzureRM 5.0 Code Migration
+### 7. AzureRM 5.0 Code Migration
 
 - Before touching resource/data-source code, read the official upgrade guide: [AzureRM Provider 5.0 Upgrade Guide](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/5.0-upgrade-guide).
   The registry renders that page client-side, so agents fetching it programmatically get an empty document. Use the
@@ -255,16 +270,16 @@ When upgrading a module to v9, apply the following changes in addition to the gu
 - Identify and apply every breaking change relevant to the resources used in the module (renamed/removed arguments, changed defaults, removed resources/data sources, behavior changes, etc.) as documented in the guide.
 - Re-run `tflint` and `tofu validate`/`plan` after migration to confirm the module is compatible with AzureRM `~> 5.0`.
 
-### 7. Regenerate README.md
+### 8. Regenerate README.md
 
-- After the `.config` sync (step 5), regenerate `README.md` with `terraform-docs` using the updated [`.config/terraform-docs.yml`](.config/terraform-docs.yml) template, via the `tofu_docs` hook (`prek`/`pre-commit`):
+- After the `.config` sync (step 6), regenerate `README.md` with `terraform-docs` using the updated [`.config/terraform-docs.yml`](.config/terraform-docs.yml) template, via the `tofu_docs` hook (`prek`/`pre-commit`):
   ```bash
   prek run tofu_docs --all-files
   # or: pre-commit run tofu_docs --all-files
   ```
 - Review the diff to ensure inputs/outputs/versions reflect the v9 changes (new variables, outputs, version constraints).
 
-### 8. Commit and Open MR
+### 9. Commit and Open MR
 
 - Commit all v9 upgrade changes using [Conventional Commits](https://www.conventionalcommits.org/) with the following structure:
   ```
@@ -274,8 +289,8 @@ When upgrading a module to v9, apply the following changes in addition to the gu
 
   BREAKING CHANGES: {breaking description}
   ```
-  - `{description body}`: summarize the changes applied (version bumps, examples updated, AzureRM 5.0 migration, README regeneration, etc.).
-  - `BREAKING CHANGES: {breaking description}`: list every breaking change from the AzureRM 5.0 migration (step 6) and the raised minimum versions, so consumers know what to expect when upgrading.
+  - `{description body}`: summarize the changes applied (version bumps, diagnostic settings module bump, examples updated, AzureRM 5.0 migration, README regeneration, etc.).
+  - `BREAKING CHANGES: {breaking description}`: list every breaking change from the AzureRM 5.0 migration (step 7) and the raised minimum versions, so consumers know what to expect when upgrading.
 - Push the development branch, then open a merge request from `v9/SREAA-368` against `master` or `main`
   (default branch) using the [`glab`](https://gitlab.com/gitlab-org/cli) CLI. `--source-branch` is the branch
   holding the work and `--target-branch` is the branch it is merged into, so the target is the default branch,
@@ -287,7 +302,7 @@ When upgrading a module to v9, apply the following changes in addition to the gu
     --source-branch v9/SREAA-368 \
     --target-branch master \
     --title "feat(SREAA-368): upgrade module to v9 (OpenTofu >= 1.12, AzureRM ~> 5.0)" \
-    --description "{description body}"
+    --description "@ldap-sync/FR-Git-Factory-FAC-SJSVSK {description body}"
   ```
   `--source-branch` defaults to the current branch and can be omitted when running the command from
   `v9/SREAA-368`. Use `--target-branch main` on modules whose default branch is `main`.
