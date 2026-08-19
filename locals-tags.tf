@@ -4,4 +4,3 @@ locals {
     stack = var.stack
   } : {}
 }
-

@@ -5,4 +5,4 @@ environment         = "test"
 stack               = "ci"
 resource_group_name = "ci"
 
-enable_force_tunneling = true
+force_tunneling_enabled = true
