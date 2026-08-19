@@ -1,3 +1,35 @@
+## 9.0.0 (2026-08-19)
+
+### ⚠ BREAKING CHANGES
+
+* **SREAA-368:** raises the minimum required OpenTofu version to >= 1.12
+(was >= 1.8) and the AzureRM provider constraint to ~> 5.0 (was ~> 4.31).
+The azurecaf provider constraint is now ~> 1.3.0 (was >= 1.2.28). Terraform
+(Hashicorp) remains unverified, as since v8.0.0. Consumers must upgrade
+OpenTofu and the AzureRM provider before consuming this module version.
+AzureRM 5.0 also changes provider-level defaults that consumers own in their
+own provider block: `resource_provider_registrations` now defaults to `none`
+instead of `legacy`, `skip_provider_registration` has been removed, and
+`enhanced_validation` moved inside the `features` block with location and
+resource-provider validation disabled by default.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+
+### Features
+
+* **SREAA-368:** upgrade module to v9 (OpenTofu >= 1.12, AzureRM ~> 5.0) 037b2a0
+
+### Documentation
+
+* **agents:** 📝 fix errors in the v9 upgrade instructions 63218c8
+
+### Miscellaneous Chores
+
+* **deps:** update dependency opentofu to v1.12.5 8e84de1
+* **deps:** update dependency tflint to v0.64.0 bb8bca6
+* **SREAA-368:** synchronize committed.toml and AGENTS.md from the ci template 43eea63
+* **v9:** 🐛 synchronize common files and docs 57af5a1
+
 ## 8.0.5 (2026-07-20)
 
 ### Bug Fixes
